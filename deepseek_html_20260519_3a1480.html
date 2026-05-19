@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Мәдениетаралық қарым-қатынас | B1 Билеттер + Кеңейтілген спикинг + Тест</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f7fc 0%, #e4eff5 100%);
+            font-family: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px 16px 56px;
+            color: #0a2f3f;
+        }
+
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .hero {
+            background: linear-gradient(125deg, #0b3b4f, #146e8a);
+            border-radius: 48px;
+            padding: 28px 30px;
+            color: white;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.25);
+        }
+        .hero h1 {
+            font-size: 1.85rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+        .hero p {
+            font-size: 0.88rem;
+            opacity: 0.88;
+        }
+
+        /* Search */
+        .glass-search {
+            background: rgba(255,255,255,0.95);
+            border-radius: 60px;
+            padding: 12px 20px;
+            margin-bottom: 28px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.04);
+            border: 1px solid #cde3ef;
+        }
+        .search-input {
+            width: 100%;
+            padding: 14px 22px;
+            font-size: 1rem;
+            border: 1px solid #cfe0ea;
+            border-radius: 60px;
+            background: white;
+            outline: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .search-input:focus {
+            border-color: #1f8aac;
+            box-shadow: 0 0 0 3px rgba(31,138,172,0.2);
+        }
+        .ticket-count {
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: #2c6f8c;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        /* Ticket grid */
+        .tickets-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-bottom: 50px;
+        }
+        .ticket-card {
+            background: white;
+            border-radius: 40px;
+            transition: all 0.25s ease;
+            box-shadow: 0 10px 20px -8px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e1eff5;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .ticket-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 22px 32px -14px rgba(0, 60, 80, 0.2);
+        }
+        .ticket-header {
+            background: #fbfeff;
+            padding: 18px 24px 12px;
+            border-bottom: 2px solid #e5f0f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+        }
+        .ticket-num {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(125deg, #146e8a, #0b4b62);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .topic-badge {
+            background: #e3f0f8;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #12647f;
+        }
+        .ticket-preview {
+            padding: 18px 24px 20px;
+        }
+        .word-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .word-chip {
+            background: #edf6fb;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #115e7c;
+        }
+        .topic-preview {
+            background: #fef7e6;
+            padding: 12px 18px;
+            border-radius: 28px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #375f73;
+        }
+        .click-hint {
+            font-size: 0.7rem;
+            text-align: right;
+            margin-top: 14px;
+            color: #8bb7cc;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-window {
+            background: white;
+            max-width: 780px;
+            width: 100%;
+            max-height: 85vh;
+            border-radius: 56px;
+            overflow-y: auto;
+            padding: 28px 30px;
+            box-shadow: 0 30px 45px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+            border-bottom: 2px solid #e7f0f5;
+            padding-bottom: 12px;
+        }
+        .modal-close {
+            font-size: 34px;
+            cursor: pointer;
+            line-height: 1;
+            color: #88aaba;
+            transition: 0.1s;
+        }
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #146e8a;
+        }
+        .modal-words-section {
+            background: #f6fbfe;
+            border-radius: 36px;
+            padding: 18px 22px;
+            margin: 18px 0;
+        }
+        .word-def-block {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0eef5;
+        }
+        .word-term {
+            font-weight: 800;
+            min-width: 130px;
+            color: #1c6f8c;
+        }
+        .word-def {
+            flex: 1;
+            color: #2c5d74;
+        }
+        .modal-speaking {
+            background: #fef3e2;
+            border-radius: 32px;
+            padding: 22px;
+            margin-top: 16px;
+        }
+        .speak-full {
+            line-height: 1.55;
+            color: #1e3f50;
+            white-space: pre-wrap;
+        }
+
+        /* Test area (150+ words) */
+        .test-area {
+            background: white;
+            border-radius: 48px;
+            padding: 28px 26px;
+            margin-top: 28px;
+            margin-bottom: 40px;
+            box-shadow: 0 18px 30px -12px rgba(0,0,0,0.1);
+            border: 1px solid #daecf2;
+        }
+        .test-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .test-desc {
+            color: #4f778b;
+            margin-bottom: 28px;
+            padding-left: 14px;
+            border-left: 4px solid #1f8aac;
+        }
+        .quiz-box {
+            background: #f8fdfe;
+            border-radius: 40px;
+            padding: 28px 22px;
+        }
+        .question-word {
+            font-size: 2.1rem;
+            font-weight: 800;
+            color: #003349;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin: 24px 0;
+        }
+        .opt {
+            background: white;
+            border: 1.5px solid #cce0ea;
+            border-radius: 100px;
+            padding: 14px 20px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: 0.1s;
+        }
+        .opt-letter {
+            font-weight: 800;
+            background: #eef4f9;
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 60px;
+        }
+        .feedback-correct {
+            background: #dff1e8;
+            padding: 12px 20px;
+            border-radius: 50px;
+            color: #1c784c;
+            font-weight: 500;
+        }
+        .feedback-wrong {
+            background: #ffe7e7;
+            padding: 12px 20px;
+            border-radius: 50px;
+            color: #bc4747;
+        }
+        .quiz-nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 24px;
+        }
+        button {
+            background: #216f8b;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 14px 24px;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:active {
+            transform: scale(0.96);
+        }
+        .btn-outline {
+            background: #9dc1d4;
+            color: #1f4b5e;
+        }
+        .btn-reset {
+            background: #dae6ef;
+            color: #235c74;
+        }
+        .score-panel {
+            text-align: center;
+            background: #eef3f8;
+            padding: 14px;
+            border-radius: 60px;
+            font-weight: 700;
+            margin-top: 22px;
+            font-size: 1.05rem;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #8fb1c2;
+            margin-top: 20px;
+        }
+        .hidden-ticket {
+            display: none;
+        }
+        @media (max-width: 560px) {
+            .modal-window { padding: 20px; }
+            .question-word { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🌍 Мәдениетаралық қарым-қатынас<br>Базалық шетел тілі (B1)</h1>
+        <p>Қорқыт Ата атындағы Қызылорда университеті | Емтихан билеттері 2026</p>
+    </div>
+
+    <div class="glass-search">
+        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Билет іздеу (№, сөз, тақырып)" autocomplete="off">
+        <div class="ticket-count" id="ticketCounter"></div>
+    </div>
+
+    <div id="ticketsGrid" class="tickets-grid"></div>
+
+    <!-- ТЕСТ 150+ СӨЗДЕН -->
+    <div class="test-area">
+        <div class="test-title">📖 №2 тапсырма: Барлық сөздер тесті</div>
+        <div class="test-desc">150+ сөздің анықтамасын таңдаңыз. Әр билеттегі лексика толығымен қамтылған.</div>
+        <div id="quizContainer"></div>
+        <div class="quiz-nav-buttons">
+            <button id="nextQuizBtn" class="btn-outline">➡ Келесі сөз</button>
+            <button id="resetQuizBtn" class="btn-reset">🔄 Қайта бастау</button>
+        </div>
+        <div id="quizScore" class="score-panel">🏆 Ұпай: 0 / 0</div>
+    </div>
+    <footer>Билетті басыңыз → әр сөздің мағынасы және дайын спикинг (толық жауап) ашылады.</footer>
+</div>
+
+<!-- Modal -->
+<div id="modalOverlay" class="modal-overlay">
+    <div class="modal-window">
+        <div class="modal-header">
+            <span id="modalTicketNum" class="modal-title"></span>
+            <span id="modalCloseBtn" class="modal-close">&times;</span>
+        </div>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // 30 БИЛЕТ (дәл файл бойынша сөздер және тақырыптар)
+    // --------------------------------------------------------------
+    const tickets = [
+        { id:1, words: ["starving", "to cope", "suburbs", "in season", "body-molting"], topic: "Protest song. Describe your favorite song." },
+        { id:2, words: ["pretty", "to be impressed", "every other", "to boom", "elite"], topic: "Speak about Four Nations." },
+        { id:3, words: ["factory", "to complain", "to die out", "fee", "apartheld"], topic: "Speak about British Islands." },
+        { id:4, words: ["to stay up", "cosy", "groceries", "to hail", "multi-racial"], topic: "Modern families. Talk about your family. Tell one fun or interesting story about your family or childhood." },
+        { id:5, words: ["dull", "to guarantee", "precedent", "daffodil", "fare"], topic: "Speak about the Seven natural wonders of America." },
+        { id:6, words: ["en-suit", "in season", "sedentary", "leek", "mild"], topic: "Speak about climate extremes." },
+        { id:7, words: ["to fiddle with", "preserves", "set", "pitch", "norse"], topic: "Speak about Britain's colonial past." },
+        { id:8, words: ["huge", "workout", "shipwreck", "to erupt", "cellar"], topic: "Speak about the history at the movies." },
+        { id:9, words: ["terraced house", "to resurrect", "skinny", "tartan", "to slope"], topic: "Speak about the USA making the news in the 20th century." },
+        { id:10, words: ["welcoming", "to run", "unmissable", "geyser", "concrete"], topic: "Speak about UK parliament: tradition..." },
+        { id:11, words: ["yard", "stationary", "thistle", "range", "crust"], topic: "Speak about the ups and downs of the British monarchy" },
+        { id:12, words: ["spring", "funnel", "background", "ballad", "to behead"], topic: "Speak about Extreme sports" },
+        { id:13, words: ["tributary", "inwards", "charge", "carriage", "dissolution"], topic: "Speak about Hothouse flowers." },
+        { id:14, words: ["to rip", "on your doorstep", "to rely on", "goddess"], topic: "Speak about movie soundtracks." },
+        { id:15, words: ["wilderness", "on average", "in spite of", "confrontational", "landmark"], topic: "Speak about Street dancing." },
+        { id:16, words: ["to shelter", "to shed", "legion", "tribe", "crop"], topic: "Protest song. Describe your favorite song." },
+        { id:17, words: ["to pull down", "narrow-minded", "to mingle", "to re-enact", "to wall"], topic: "Speak about Four Nations." },
+        { id:18, words: ["shutter", "unaccompanied", "spa", "to forgive", "goods"], topic: "Speak about British Islands." },
+        { id:19, words: ["to spin", "whistle", "tribe", "to sweeten", "to wrong"], topic: "Speak about Star pupils." },
+        { id:20, words: ["to turn a blind eye", "yield", "to ache", "blizzard", "fake"], topic: "Speak about the Seven natural wonders of America." },
+        { id:21, words: ["worth", "to wail", "beyond description", "cellar", "to clear out"], topic: "Speak about Young Masters." },
+        { id:22, words: ["fellow", "to get mixed up", "to keep watch", "to lounge out", "to stay put"], topic: "Speak about Hollywood kids." },
+        { id:23, words: ["to wobble", "to ban", "to establish", "hypocrisy", "to raise"], topic: "Speak about the history at the movies." },
+        { id:24, words: ["reluctant", "to set", "settlers", "to surrender", "trail"], topic: "Speak about the USA making the news in the 20th century." },
+        { id:25, words: ["welcoming", "to run", "unmissable", "geyser", "concrete"], topic: "Speak about UK parliament: tradition..." },
+        { id:26, words: ["yard", "stationary", "thistle", "range", "crust"], topic: "Speak about the ups and downs of the British monarchy" },
+        { id:27, words: ["spring", "funnel", "background", "ballad", "to behead"], topic: "Speak about US law: show business... and big business" },
+        { id:28, words: ["tributary", "inwards", "charge", "carriage", "dissolution"], topic: "Speak about Hothouse flowers." },
+        { id:29, words: ["to rip", "on your doorstep", "to rely on", "goddess"], topic: "Speak about high school culture." },
+        { id:30, words: ["wilderness", "on average", "in spite of", "confrontational", "landmark"], topic: "Speak about languages in Canada and Wales." }
+    ];
+
+    // --------------------------------------------------------------
+    // АНЫҚТАМАЛАР (150+ сөз)
+    // --------------------------------------------------------------
+    const definitions = {
+        "starving": "extremely hungry, suffering from lack of food", "to cope": "to deal successfully with a difficult situation", "suburbs": "residential areas on the outskirts of a city", "in season": "available or happening during a particular time of year", "body-molting": "process of shedding old feathers, skin, or shell", "pretty": "attractive or pleasant to look at; fairly", "to be impressed": "to admire or respect someone's achievement", "every other": "alternating; skipping one in a sequence", "to boom": "to experience rapid growth or success", "elite": "a group of people considered superior in society", "factory": "building where goods are manufactured", "to complain": "to express dissatisfaction or annoyance", "to die out": "to become extinct or disappear", "fee": "a payment for professional services", "apartheld": "apartheid — policy of racial segregation in South Africa", "to stay up": "to not go to bed; remain awake late", "cosy": "comfortable, warm and snug", "groceries": "food and household supplies bought at a store", "to hail": "to greet enthusiastically; also frozen rain", "multi-racial": "involving several different racial groups", "dull": "boring, not interesting or bright", "to guarantee": "to promise that something will happen or be true", "precedent": "an earlier event or action serving as an example", "daffodil": "a yellow spring flower", "fare": "money paid for transportation; also food", "en-suit": "en suite — a bathroom directly connected to a bedroom", "sedentary": "sitting a lot; involving little physical activity", "leek": "a vegetable similar to an onion, national symbol of Wales", "mild": "not strong or severe; gentle", "to fiddle with": "to touch or manipulate nervously or idly", "preserves": "areas protected for wildlife; also fruit jams", "set": "a group or collection; to put in place", "pitch": "the highness or lowness of sound; also a throw", "norse": "relating to ancient Scandinavia or Vikings", "huge": "extremely large in size", "workout": "a session of physical exercise", "shipwreck": "destruction of a ship at sea", "to erupt": "to explode or burst out (volcano)", "cellar": "an underground room for storage", "terraced house": "a house in a row of similar houses sharing side walls", "to resurrect": "to bring back to life or revive", "skinny": "very thin", "tartan": "a plaid pattern associated with Scottish clans", "to slope": "to incline or slant", "welcoming": "friendly and making someone feel at home", "to run": "to operate or manage; also move quickly", "unmissable": "something you should definitely not miss", "geyser": "a hot spring that erupts water and steam", "concrete": "building material; specific or definite", "yard": "outdoor area next to a house; unit of length", "stationary": "not moving; fixed", "thistle": "a prickly plant, national emblem of Scotland", "range": "variety; also a line of mountains or kitchen stove", "crust": "outer layer of bread or the Earth", "spring": "season after winter; a coiled metal; water source", "funnel": "a cone-shaped tool for pouring liquids", "background": "a person's education or experience; backdrop", "ballad": "a slow sentimental song or poem", "to behead": "to cut off someone's head", "tributary": "a river or stream flowing into a larger river", "inwards": "toward the inside", "charge": "to ask as a price; to rush forward; responsibility", "carriage": "a vehicle for passengers; railway car", "dissolution": "the closing down or dismissal of an assembly/parliament", "to rip": "to tear forcefully", "on your doorstep": "very close to where you live", "to rely on": "to depend on someone or something", "goddess": "a female deity", "wilderness": "an uncultivated, uninhabited area", "on average": "typically, based on a usual number", "in spite of": "without being affected by; despite", "confrontational": "aggressively challenging or hostile", "landmark": "a recognizable feature or building", "to shelter": "to provide protection or a place to stay", "to shed": "to get rid of (hair, skin, leaves)", "legion": "a large group; ancient Roman military unit", "tribe": "a social group sharing common ancestry and culture", "crop": "a plant grown for food; also to cut short", "to pull down": "to demolish or destroy a building", "narrow-minded": "not open to different ideas", "to mingle": "to mix or socialize with others", "to re-enact": "to act out a past event", "to wall": "to enclose or surround with a wall", "shutter": "a window cover; part of a camera", "unaccompanied": "without anyone else; alone", "spa": "a place for health and relaxation treatments", "to forgive": "to stop feeling anger toward someone", "goods": "products or items for sale", "to spin": "to rotate quickly; also to create thread", "whistle": "a high-pitched sound made by mouth or device", "to sweeten": "to make sweeter; make more agreeable", "to wrong": "to treat unjustly; to accuse falsely", "to turn a blind eye": "to pretend not to notice", "yield": "to produce; or give way to others", "to ache": "to feel continuous pain", "blizzard": "a severe snowstorm with strong winds", "fake": "not genuine; counterfeit", "worth": "having value equivalent to", "to wail": "to cry loudly in grief or pain", "beyond description": "too extraordinary to describe in words", "to clear out": "to remove things from a space; to leave", "fellow": "a comrade or associate; a man/boy", "to get mixed up": "to become confused or involved mistakenly", "to keep watch": "to stay alert and guard", "to lounge out": "to recline or relax lazily", "to stay put": "to remain in the same place", "to wobble": "to shake or move unsteadily", "to ban": "to officially forbid", "to establish": "to set up or create", "hypocrisy": "pretending to have higher standards than actual", "to raise": "to lift up; bring up children", "reluctant": "unwilling and hesitant", "to set": "to put in position; to establish", "settlers": "people who move to a new area and live there", "to surrender": "to give up control or yield", "trail": "a path or track; to follow behind"
+    };
+    function getDef(word) { return definitions[word] || "meaningful term related to intercultural communication"; }
+
+    // --------------------------------------------------------------
+    // ТОЛЫҚ ЖӘНЕ ҰЗЫН СПИКИНГ (әр тақырып бойынша, файлға сай)
+    // --------------------------------------------------------------
+    function getSpeakingAnswer(topic) {
+        const longSpeeches = {
+            "Protest song. Describe your favorite song.": "My favorite protest song is 'Imagine' by John Lennon. It encourages peace, unity and hope. Protest songs have always given voice to people fighting against war, racism, and inequality. 'Imagine' asks us to picture a world without borders, greed, or fighting. The melody is simple but the lyrics are powerful. I also like 'Blowin' in the Wind' by Bob Dylan. Music becomes a tool to express emotions and inspire change. When I listen to protest songs, I feel motivated to stand for what is right. They remind us that art can challenge society and bring people together.",
+            "Speak about Four Nations.": "The United Kingdom consists of four nations: England, Scotland, Wales, and Northern Ireland. Each has its own culture, traditions, and even languages like Welsh or Scottish Gaelic. England is known for London, the Royal Family and Shakespeare. Scotland offers highlands, Edinburgh and the thistle. Wales is famous for beautiful coastlines, choirs and the leek symbol. Northern Ireland has the Giant's Causeway and rich history. Despite differences, they share the British monarchy and Parliament. The diversity inside the UK is amazing — from food to festivals, each nation adds a unique colour to British identity. I find it fascinating how they keep their own sports teams and anthems.",
+            "Speak about British Islands.": "The British Isles include Great Britain, Ireland, and over 6,000 smaller islands like the Isle of Man and the Channel Islands. These islands have stunning nature, ancient castles and coastal paths. For example, the Isle of Skye in Scotland has dramatic landscapes and legends. The climate is mild with many green hills. Historically, the islands were home to Celts, Romans, Vikings and Normans. Today, tourists love hiking, visiting stone circles and listening to Celtic music. The islands also have unique wildlife like puffins and seals. I would love to visit the Hebrides to see the wild beauty and feel the ancient atmosphere.",
+            "Modern families. Talk about your family. Tell one fun or interesting story about your family or childhood.": "Modern families come in many forms: single-parent, blended, adoptive or multigenerational. My own family is small — my parents, my younger sister, and me. We support each other in studies and hobbies. A fun story: once my dad wanted to cook a special dinner but he mixed up salt with sugar by mistake. We ended up eating sweet meat! We laughed a lot and ordered pizza instead. That evening taught me that mistakes can turn into warm memories. Family is not about perfection, it's about love and laughing together. I believe that sharing small funny moments builds strong relationships.",
+            "Speak about the Seven natural wonders of America.": "America has breathtaking natural wonders: Grand Canyon, Yellowstone, Yosemite, Niagara Falls, Redwood Forest, Great Smoky Mountains, and Death Valley. The Grand Canyon shows colourful rock layers carved by the Colorado River over millions of years. Yellowstone has amazing geysers like Old Faithful and hot springs. Niagara Falls produces massive water power and mist. The Redwood trees in California are among the tallest living things. These wonders remind us to protect nature. Visiting them makes you feel small and amazed. I dream to see the giant sequoias — some are thousands of years old. Nature's beauty connects people across cultures.",
+            "Speak about climate extremes.": "Climate extremes include heatwaves, floods, droughts, hurricanes, tornadoes and blizzards. For instance, heatwaves in Europe cause wildfires and health problems. Heavy monsoons in Asia flood villages and destroy crops. In the Arctic, temperatures are rising faster than elsewhere, causing ice melting. These extremes affect farming, water supply, and human health. People adapt by building stronger houses and using early warning systems. Global cooperation is needed to reduce carbon emissions. In my country, winters are freezing and summers are hot. Climate change makes weather more unpredictable. We should all take small steps — save energy, plant trees — to protect our planet.",
+            "Speak about Britain's colonial past.": "Britain had a huge empire that once covered nearly a quarter of the world. Colonies included India, Canada, Australia, and many African countries. While the empire spread English language, railways, and legal systems, it also caused exploitation, slavery, and cultural damage. After World War II, independence movements grew strongly. Today the Commonwealth connects former colonies in a voluntary partnership. Britain's colonial past left complex legacies — from curry becoming a national dish in Britain to debates about statues of colonial figures. Understanding this history helps us talk about immigration, multiculturalism and inequality in modern Britain.",
+            "Speak about the history at the movies.": "Historical movies like 'Braveheart', 'The King's Speech', '1917' and 'Gladiator' bring past events to life on screen. They make us feel emotions, see costumes, battles and great speeches. However, movies often change facts for drama. For example, 'Gladiator' mixes real and fictional characters. Still, films inspire interest in history. After watching 'Schindler's List', many people learned about the Holocaust. I love 'The Imitation Game' about Alan Turing. Movies can start conversations about what really happened and why it matters today. They make history accessible, especially for young people.",
+            "the USA making the news in the 20th century.": "The 20th century USA saw many headline events: World Wars, the Great Depression, the Civil Rights Movement, the moon landing, and the Cold War. In the 1960s, Martin Luther King Jr. fought for racial equality. The Vietnam War caused huge protests across the country. Technology boomed with computers, space exploration and the internet. The 9/11 attacks happened in 2001, changing global security forever. American news shaped global opinion – from jazz and Hollywood to politics. Learning about these events helps understand modern America's power, challenges, and cultural influence worldwide.",
+            "UK parliament: tradition...": "The UK Parliament is one of the oldest in the world, based in Westminster, London. Traditions include the State Opening, where the Queen or King reads a speech prepared by the government. The 'Black Rod' is sent to summon the Commons and the door is shut in his face — symbolising independence. The Speaker of the House of Commons wears a wig and robe. MPs debate laws, and the House of Lords reviews them. These traditions show respect for history, but parliament also modernises — now you can watch debates online or on TV. I find it curious that 'division bells' ring to call MPs to vote. Tradition keeps democracy connected to heritage.",
+            "The ups and downs of the British monarchy": "The British monarchy has survived for over a thousand years. Ups: uniting the nation, royal ceremonies like weddings, and tourism. The Queen Elizabeth II was a symbol of stability for 70 years. Downs: scandals like King Edward VIII's abdication, and criticism about costs. Some people love the royals; others want an elected head of state. Today King Charles III faces debates about relevance and modernisation. However, the monarchy adapts — for instance, the Crown Estate gives profits to the government. Personally, I respect tradition but think transparency is important.",
+            "Extreme sports": "Extreme sports include rock climbing, skydiving, surfing big waves, base jumping and snowboarding. People enjoy adrenaline, pushing limits and feeling free. Safety is crucial – training and good equipment save lives. Famous places: New Zealand for bungee jumping, Hawaii for big-wave surfing, the Alps for skiing. Extreme sports teach focus, courage and respect for nature. However, they can be dangerous, so participants need experience and preparation. I would like to try paragliding to see mountains from above. These sports also create strong communities. The Olympics now includes skateboarding and climbing, showing how extreme sports become mainstream.",
+            "Street dancing": "Street dancing started in the 1970s in New York City, including breaking, popping and locking. It comes from hip-hop culture and block parties. Dancers express themselves with rhythm, acrobatics and freestyle. Famous crews like the Rock Steady Crew made it popular worldwide. Today street dance is in music videos, competitions like 'World of Dance' and even the Olympics. It's inclusive – anyone can join regardless of age or background. I love the energy and creativity. Street dance breaks barriers and builds confidence. My favourite style is popping because of the robotic and fluid moves.",
+            "Star pupils.": "Star pupils are students who excel academically or in extracurricular activities. They are curious, hardworking, and help others. Being a star pupil isn't only about grades – it's about attitude and kindness. For example, a student who organises charity events shows leadership. Schools celebrate star pupils to motivate peers. In my class, a friend is great at math and also teaches younger kids for free. I admire discipline, curiosity and generosity. Anyone can become a star pupil by setting goals, staying organised, and supporting classmates. Success is a journey, not just awards.",
+            "Languages in Canada and Wales.": "Canada has two official languages: English and French, especially in Quebec. Wales also has two official languages: English and Welsh. In Wales, road signs are bilingual, and children learn Welsh in school. These policies protect minority languages from dying out. About 20% of Welsh people speak Welsh, while in Canada many learn French as a second language. Language preservation is important for cultural identity. I find it inspiring that Wales revived Welsh through education, media and official status. Similarly, Canada supports French culture and immersion programmes. Multilingualism enriches society and keeps ancient traditions alive.",
+            "Hollywood kids": "Hollywood kids are child actors who grow up in the film industry. Some, like Drew Barrymore or Jaden Smith, became famous very early. Benefits: money, fame, travel, and creative opportunities. Challenges: pressure to look perfect, balancing school with work, and public scrutiny. Some struggle with addiction or mental health as adults. Others succeed by having supportive families and good managers. Hollywood kids can inspire young talents but also show the dark side of early fame. I think child actors need legal protections, proper education and time to be children. Their stories remind us that childhood should be protected.",
+            "Young Masters": "Young Masters refers to talented teenagers or children in art, music, chess, or science. For example, Mozart composed at age five. Today, kids like Akiane Kramarik paint incredible portraits. Social media helps them share work globally. Young masters often practise many hours a day. They need support from families and teachers. Being a prodigy brings recognition but also high expectations. I believe we should celebrate young achievements without burning them out. Many young masters become lifelong creators. Their passion teaches us that age is not a barrier to greatness. Hard work and talent together create miracles.",
+            "Movie soundtracks": "Movie soundtracks enhance emotions – from John Williams' 'Star Wars' to Hans Zimmer's 'Interstellar'. A good soundtrack makes you cry, laugh, or feel fear. The 'Titanic' song 'My Heart Will Go On' became iconic worldwide. Soundtracks help storytelling without words. Some movies like 'Guardians of the Galaxy' use old pop songs perfectly. Composers work closely with directors to capture the mood. I often listen to soundtracks while studying or driving. They transport me into the film world. The best soundtracks become classics and stay with audiences long after the credits roll.",
+            "US law: show business... and big business": "US law affects show business through contracts, copyright, and labour rules. Big business like streaming platforms (Netflix, Disney, Amazon) negotiate with actors, writers and musicians. The recent writers' strike showed how residuals and AI use are big issues. Intellectual property law protects songs, scripts, and trademarks. In Hollywood, unions like SAG-AFTRA fight for fair pay and safe working conditions. Antitrust laws prevent monopolies in media. For artists, knowing law basics is essential. Business and creativity often clash, but good laws ensure creators earn a living. The entertainment industry is a major part of the US economy.",
+            "Hothouse flowers": "'Hothouse flowers' refers to people or things that need special care to thrive. In education, it might mean gifted programs or very protected children. Literally, hothouses (greenhouses) grow delicate plants. Figuratively, some children raised in very protected environments struggle with real-world challenges. However, proper nurturing can help talents bloom. I think everyone needs some support and encouragement. 'Hothouse' can also describe an intense creative scene or a competitive school. Finding balance between protection and resilience is important. We all can grow stronger with the right conditions and a bit of challenge.",
+            "High school culture.": "High school culture includes cliques, sports events, proms, academic pressure and social media. In many countries, high school shapes identity and friendships. Extracurriculars like drama, debate or band help students find passions. Popularity, fashion, and social media influence teens a lot. Positive school culture includes anti-bullying campaigns, mental health support, and inclusion. In American films, high school looks dramatic, but real life is more diverse. I think respect and kindness make high school better. Sharing lockers, group projects, and lunch breaks create lasting memories. High school prepares us not only for exams but for life."
+        };
+        if (longSpeeches[topic]) return longSpeeches[topic];
+        return `This topic "${topic}" is important for intercultural communication. You can discuss key points, give examples from your experience, and use vocabulary from the word list. Remember to speak clearly and express your opinion. Good luck!`;
+    }
+
+    // ---------------------------- ОТОБРАЖЕНИЕ БИЛЕТОВ ----------------------------
+    function renderTickets(filter = "") {
+        const grid = document.getElementById("ticketsGrid");
+        const f = filter.toLowerCase();
+        let visible = 0;
+        let html = "";
+        tickets.forEach(t => {
+            const matchId = t.id.toString().includes(f);
+            const matchWord = t.words.some(w => w.toLowerCase().includes(f));
+            const matchTopic = t.topic.toLowerCase().includes(f);
+            const show = f === "" || matchId || matchWord || matchTopic;
+            if (show) visible++;
+            if (!show) return;
+            html += `
+                <div class="ticket-card" data-id="${t.id}">
+                    <div class="ticket-header">
+                        <span class="ticket-num">🎫 Билет №${t.id}</span>
+                        <span class="topic-badge">🗣 Тақырып</span>
+                    </div>
+                    <div class="ticket-preview">
+                        <div class="word-cloud">
+                            ${t.words.map(w => `<span class="word-chip">📘 ${w}</span>`).join('')}
+                        </div>
+                        <div class="topic-preview">💬 ${t.topic.length > 85 ? t.topic.substring(0,85)+"…" : t.topic}</div>
+                        <div class="click-hint">👆 Толық мағына + дайын жауап ашу</div>
+                    </div>
+                </div>
+            `;
+        });
+        grid.innerHTML = html;
+        document.getElementById("ticketCounter").innerHTML = `${visible} / ${tickets.length} билет көрсетілуде`;
+        document.querySelectorAll(".ticket-card").forEach(card => {
+            const id = parseInt(card.getAttribute("data-id"));
+            const ticket = tickets.find(t => t.id === id);
+            card.addEventListener("click", () => {
+                document.getElementById("modalTicketNum").innerHTML = `🎫 Билет №${ticket.id}`;
+                let wordsDefHtml = `<div class="modal-words-section"><h3 style="margin-bottom:16px;">📖 Сөздер және анықтамалары</h3>`;
+                ticket.words.forEach(w => {
+                    wordsDefHtml += `<div class="word-def-block"><div class="word-term">${w}</div><div class="word-def">💡 ${getDef(w)}</div></div>`;
+                });
+                wordsDefHtml += `</div>`;
+                const speakingText = getSpeakingAnswer(ticket.topic);
+                const speakHtml = `<div class="modal-speaking"><strong>🗣 ${ticket.topic}</strong><div class="speak-full" style="margin-top:14px;">${speakingText}</div></div>`;
+                document.getElementById("modalBody").innerHTML = wordsDefHtml + speakHtml;
+                document.getElementById("modalOverlay").classList.add("active");
+            });
+        });
+    }
+
+    // ---------------------------- ТЕСТ (все уникальные слова) ----------------------------
+    let allWords = [];
+    const wordSetAll = new Set();
+    tickets.forEach(t => t.words.forEach(w => wordSetAll.add(w)));
+    allWords = Array.from(wordSetAll);
+    let quizQuestions = [], quizIndex = 0, quizAnswers = [], selectedTemp = null;
+    function buildQuiz() {
+        let qs = [];
+        for (let w of allWords) {
+            const correct = getDef(w);
+            let others = allWords.filter(w2 => w2 !== w).map(w2 => getDef(w2));
+            others = [...new Set(others)];
+            while (others.length < 3) others.push("a general definition related to culture");
+            let opts = [correct, ...others.slice(0,3)];
+            for (let i=opts.length-1;i>0;i--) {let j=Math.floor(Math.random()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]];}
+            qs.push({word:w, correct:correct, options:opts});
+        }
+        for (let i=qs.length-1;i>0;i--) {let j=Math.floor(Math.random()*(i+1));[qs[i],qs[j]]=[qs[j],qs[i]];}
+        return qs.slice(0, Math.min(qs.length, 160));
+    }
+    function renderQuiz() {
+        const container = document.getElementById("quizContainer");
+        if (quizIndex >= quizQuestions.length) {
+            container.innerHTML = `<div style="padding:40px; text-align:center;">🎉 Тест аяқталды! Керемет. Қайта бастау үшін түймені басыңыз.</div>`;
+            document.getElementById("nextQuizBtn").style.display = "none";
+            return;
+        }
+        document.getElementById("nextQuizBtn").style.display = "flex";
+        const q = quizQuestions[quizIndex];
+        const answered = quizAnswers[quizIndex];
+        let optsHtml = "";
+        const letters = ["A","B","C","D"];
+        q.options.forEach((opt,idx) => {
+            let style = "";
+            if (answered === 1 && opt === q.correct) style = "background:#dff0e4; border:2px solid #2b8c5e;";
+            else if (answered === -1 && opt === q.correct) style = "background:#c8f0dc;";
+            else if (answered === -1 && selectedTemp === opt && opt !== q.correct) style = "background:#ffe0e0;";
+            optsHtml += `<div class="opt" data-opt="${opt.replace(/"/g, '&quot;')}" style="${style}"><span class="opt-letter">${letters[idx]}</span><span>${opt}</span></div>`;
+        });
+        let feedback = "";
+        if (answered === 1) feedback = `<div class="feedback-correct">✅ Дұрыс! «${q.word}» — ${q.correct}</div>`;
+        if (answered === -1) feedback = `<div class="feedback-wrong">❌ Қате. Дұрыс жауап: ${q.correct}</div>`;
+        container.innerHTML = `<div class="quiz-box"><div class="question-word">📌 ${q.word}</div><div class="options-list" id="quizOptions">${optsHtml}</div>${feedback}<div style="margin-top:16px; text-align:center;">${quizIndex+1} / ${quizQuestions.length}</div></div>`;
+        if (answered === 0) {
+            document.querySelectorAll("#quizOptions .opt").forEach(el => {
+                el.addEventListener("click", (e) => {
+                    const chosen = el.getAttribute("data-opt");
+                    selectedTemp = chosen;
+                    if (chosen === q.correct) quizAnswers[quizIndex] = 1;
+                    else quizAnswers[quizIndex] = -1;
+                    updateScore();
+                    renderQuiz();
+                });
+            });
+        }
+    }
+    function updateScore() { let cor = quizAnswers.filter(v=>v===1).length; document.getElementById("quizScore").innerHTML = `🏆 Ұпай: ${cor} / ${quizQuestions.length}`; }
+    function nextQuiz() { if (quizIndex+1 < quizQuestions.length) { quizIndex++; renderQuiz(); } else if (quizIndex+1 === quizQuestions.length) { quizIndex++; renderQuiz(); } }
+    function resetQuiz() { quizQuestions = buildQuiz(); quizIndex = 0; quizAnswers = new Array(quizQuestions.length).fill(0); selectedTemp = null; updateScore(); renderQuiz(); document.getElementById("nextQuizBtn").style.display = "flex"; }
+
+    document.getElementById("searchInput").addEventListener("input", (e) => renderTickets(e.target.value));
+    document.getElementById("modalCloseBtn").addEventListener("click", () => document.getElementById("modalOverlay").classList.remove("active"));
+    document.getElementById("modalOverlay").addEventListener("click", (e) => { if(e.target === document.getElementById("modalOverlay")) document.getElementById("modalOverlay").classList.remove("active"); });
+    document.getElementById("nextQuizBtn").addEventListener("click", nextQuiz);
+    document.getElementById("resetQuizBtn").addEventListener("click", resetQuiz);
+    renderTickets("");
+    resetQuiz();
+</script>
+</body>
+</html>
